@@ -27,7 +27,7 @@ export default class App extends React.Component {
       top: top,
       left: left
     });
-    this.animatedValue.x = left;
+    this.buttonAnimatedValue.x = left;
   }
   
   componentWillMount() {
@@ -39,23 +39,30 @@ export default class App extends React.Component {
     this.setState({
       value
     });
-    this.animatedValue = new Animated.ValueXY({
+    this.buttonAnimatedValue = new Animated.ValueXY({
       x: left,
       y: 0
     });
+    this.labelAnimatedValue = new Animated.Value(1);
     this.state.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderGrant: (evt, gestureState) => {
         Animated.timing(
-          // Animate value over time
-          this.animatedValue.y, // The value to drive
+          this.buttonAnimatedValue.y,
           {
             toValue: -54,
             easing: Easing.elastic(2),
             duration: 550,
           }
         ).start();
-        
+        Animated.timing(
+          this.labelAnimatedValue,
+          {
+            toValue: 0,
+            duration: 350,
+            easing: Easing.linear
+          }
+        ).start()
       },
       onPanResponderMove: (evt, gestureState) => {
         this.move(evt, gestureState, -40);
@@ -63,12 +70,19 @@ export default class App extends React.Component {
       onPanResponderRelease: (evt, gestureState) => {
         this.move(evt, gestureState, 0);
         Animated.timing(
-          // Animate value over time
-          this.animatedValue.y, // The value to drive
+          this.buttonAnimatedValue.y,
           {
             toValue: 0,
             easing: Easing.back(),
             duration: 250,
+          }
+        ).start();
+        Animated.timing(
+          this.labelAnimatedValue,
+          {
+            toValue: 1,
+            duration: 350,
+            easing: Easing.linear
           }
         ).start();
       },
@@ -76,16 +90,21 @@ export default class App extends React.Component {
   }
   
   render() {
-    const animatedStyle = {
-      transform: this.animatedValue.getTranslateTransform()
+    const labelAnimatedStyle = {
+      opacity: this.labelAnimatedValue
     };
- 
+    const buttonAnimatedStyle = {
+      transform: this.buttonAnimatedValue.getTranslateTransform()
+    };
     return (
       <View style={styles.container}>
+        <Animated.View style={[styles.label, labelAnimatedStyle]}>
+          <Text style={styles.labelInner}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</Text>
+        </Animated.View>
         <View style={styles.slider}>
           <Text style={styles.minText}>0</Text>
           <Animated.View
-            style={[styles.button, animatedStyle]}
+            style={[styles.button, buttonAnimatedStyle]}
             {...this.state.panResponder.panHandlers}
           >
             <View style={styles.buttonInner}>
@@ -106,6 +125,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 12
+  },
+  label: {
+    padding: 20,
+  },
+  labelInner: {
+  color: '#9ac6da',
+    textAlign: 'center'
   },
   slider: {
     width: '100%',
