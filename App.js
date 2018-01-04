@@ -1,5 +1,21 @@
 import React from 'react';
 import {StyleSheet, Text, PanResponder, View, Animated, Easing, Dimensions} from 'react-native';
+import Svg, {
+  Circle,
+  Ellipse,
+  G,
+  LinearGradient,
+  RadialGradient,
+  Line,
+  Path,
+  Polygon,
+  Polyline,
+  Rect,
+  Symbol,
+  Use,
+  Defs,
+  Stop
+} from 'react-native-svg';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,6 +46,35 @@ export default class App extends React.Component {
     this.buttonAnimatedValue.x = left;
   }
   
+  renderWave() {
+    const waveAnimatedStyle = {
+      marginTop: this.waveAnimatedValue
+    };
+    return (
+      <Animated.View
+        style={[{marginLeft: Number(JSON.stringify(this.buttonAnimatedValue.x)) - (91 / 2)},waveAnimatedStyle]}
+      >
+        <Svg
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          height="52"
+          width="91"
+        >
+          <Defs>
+            <G id="shape">
+              <Path
+                d="M 0 169.5 c 45.7032 0.837052 369.297 2.83705 274 0 s -18.9773 -165.543 -120 -168 s -11.5976 161.178 -154 168 Z"
+                transform="matrix(0.315 0 0 0.315 0 0)"
+                fill="#4a73fe"
+              />
+            </G>
+          </Defs>
+          <Use href="#shape" x='0' y="0" />
+        </Svg>
+      </Animated.View>
+    );
+  }
+  
   componentWillMount() {
     this.state.maxX = Dimensions.get('window').width - this.state.rightSpace;
     this.state.percentX = this.state.maxValue / (this.state.maxX - this.state.minX);
@@ -44,13 +89,14 @@ export default class App extends React.Component {
       y: 0
     });
     this.labelAnimatedValue = new Animated.Value(1);
+    this.waveAnimatedValue = new Animated.Value(0);
     this.state.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderGrant: (evt, gestureState) => {
         Animated.timing(
           this.buttonAnimatedValue.y,
           {
-            toValue: -54,
+            toValue: -52,
             easing: Easing.elastic(2),
             duration: 550,
           }
@@ -62,7 +108,15 @@ export default class App extends React.Component {
             duration: 350,
             easing: Easing.linear
           }
-        ).start()
+        ).start();
+        Animated.timing(
+          this.waveAnimatedValue,
+          {
+            toValue: -104,
+            duration: 350,
+            easing: Easing.linear
+          }
+        ).start();
       },
       onPanResponderMove: (evt, gestureState) => {
         this.move(evt, gestureState, -40);
@@ -85,6 +139,14 @@ export default class App extends React.Component {
             easing: Easing.linear
           }
         ).start();
+        Animated.timing(
+          this.waveAnimatedValue,
+          {
+            toValue: 0,
+            duration: 350,
+            easing: Easing.linear
+          }
+        ).start();
       },
     });
   }
@@ -99,9 +161,11 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.label, labelAnimatedStyle]}>
-          <Text style={styles.labelInner}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</Text>
+          <Text style={styles.labelInner}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</Text>
         </Animated.View>
         <View style={styles.slider}>
+          {this.renderWave()}
           <Text style={styles.minText}>0</Text>
           <Animated.View
             style={[styles.button, buttonAnimatedStyle]}
@@ -111,6 +175,7 @@ export default class App extends React.Component {
               <Text style={styles.buttonText}>{this.state.value}</Text>
             </View>
           </Animated.View>
+  
           <Text style={styles.maxText}>500</Text>
         </View>
       </View>
@@ -130,7 +195,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   labelInner: {
-  color: '#9ac6da',
+    color: '#9ac6da',
     textAlign: 'center'
   },
   slider: {
