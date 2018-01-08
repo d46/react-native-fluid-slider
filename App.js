@@ -63,8 +63,7 @@ export default class App extends React.Component {
           <Defs>
             <G id="shape">
               <Path
-                d="M 0 169.5 c 45.7032 0.837052 369.297 2.83705 274 0 s -18.9773 -165.543 -120 -168 s -11.5976 161.178 -154 168 Z"
-                transform="matrix(0.315 0 0 0.315 0 0)"
+                d="m 0.122362 51.9524 c 0 0 90.9523 0.15873 90.9523 0.15873 c 0 0 -19.3692 -0.235816 -20.0679 -26.0828 c -0.698655 -25.847 -25.2917 -22.829 -25.9429 -22.7721 c -0.651212 0.056926 -24.9051 -3.16373 -25.1763 22.5606 c -0.271257 25.7243 -19.7652 26.1356 -19.7652 26.1356 Z"
                 fill="#4a73fe"
               />
             </G>
@@ -74,6 +73,7 @@ export default class App extends React.Component {
       </Animated.View>
     );
   }
+  
   
   componentWillMount() {
     this.state.maxX = Dimensions.get('window').width - this.state.rightSpace;
@@ -102,17 +102,17 @@ export default class App extends React.Component {
           }
         ).start();
         Animated.timing(
-          this.labelAnimatedValue,
+          this.waveAnimatedValue,
           {
-            toValue: 0,
+            toValue: -104,
             duration: 350,
             easing: Easing.linear
           }
         ).start();
         Animated.timing(
-          this.waveAnimatedValue,
+          this.labelAnimatedValue,
           {
-            toValue: -104,
+            toValue: 0,
             duration: 350,
             easing: Easing.linear
           }
@@ -122,7 +122,6 @@ export default class App extends React.Component {
         this.move(evt, gestureState, -40);
       },
       onPanResponderRelease: (evt, gestureState) => {
-        this.move(evt, gestureState, 0);
         Animated.timing(
           this.buttonAnimatedValue.y,
           {
@@ -132,17 +131,17 @@ export default class App extends React.Component {
           }
         ).start();
         Animated.timing(
-          this.labelAnimatedValue,
+          this.waveAnimatedValue,
           {
-            toValue: 1,
+            toValue: 0,
             duration: 350,
             easing: Easing.linear
           }
         ).start();
         Animated.timing(
-          this.waveAnimatedValue,
+          this.labelAnimatedValue,
           {
-            toValue: 0,
+            toValue: 1,
             duration: 350,
             easing: Easing.linear
           }
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 12
+    padding: 12,
   },
   label: {
     padding: 20,
