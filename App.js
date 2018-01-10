@@ -104,7 +104,7 @@ export default class App extends React.Component {
         Animated.timing(
           this.waveAnimatedValue,
           {
-            toValue: -104,
+            toValue: -52,
             duration: 350,
             easing: Easing.linear
           }
@@ -164,6 +164,7 @@ export default class App extends React.Component {
             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</Text>
         </Animated.View>
         <View style={styles.slider}>
+          <View style={styles.sliderBG}/>
           {this.renderWave()}
           <Text style={styles.minText}>0</Text>
           <Animated.View
@@ -174,7 +175,6 @@ export default class App extends React.Component {
               <Text style={styles.buttonText}>{this.state.value}</Text>
             </View>
           </Animated.View>
-  
           <Text style={styles.maxText}>500</Text>
         </View>
       </View>
@@ -200,13 +200,22 @@ const styles = StyleSheet.create({
   slider: {
     width: '100%',
     height: 54,
+  },
+  sliderBG: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
     backgroundColor: '#4a73fe',
     justifyContent: 'center',
     borderRadius: 6,
   },
   minText: {
     color: '#ffffff',
+    backgroundColor: '#4a73fe',
     height: 20,
+    lineHeight: 20,
     position: 'absolute',
     left: 12,
     top: '50%',
@@ -214,6 +223,8 @@ const styles = StyleSheet.create({
   },
   maxText: {
     color: '#ffffff',
+    backgroundColor: '#4a73fe',
+    lineHeight: 20,
     height: 20,
     position: 'absolute',
     right: 12,
@@ -226,6 +237,7 @@ const styles = StyleSheet.create({
     width: 54,
     position: 'absolute',
     marginLeft: -27,
+    left: 0,
     top: 0,
     borderRadius: 54,
     justifyContent: 'center',
